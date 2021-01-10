@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { Component } from 'react';
+import Searchbar from './components/Searchbar/Searchbar';
+import ImageGallery from './components/ImageGallery/ImageGallery';
+import Modal from './components/Modal/Modal';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    searchImages: '',
+    showModal: false,
+    largeImg: '',
+    altImg: '',
+  };
+
+  toggleModal = (img, alt) => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      largeImg: img,
+      altImg: alt,
+    }));
+  };
+
+  formSubmitHandler = (img) => {
+    this.setState({ searchImages: img });
+  };
+  render() {
+    const { searchImages, showModal } = this.state;
+    return (
+      <>
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            <img src={this.state.largeImg} alt={this.state.altImg} />
+          </Modal>
+        )}
+        <Searchbar onSubmit={this.formSubmitHandler} />
+        <ImageGallery
+          searchImages={searchImages}
+          openModal={this.toggleModal}
+        />
+      </>
+    );
+  }
 }
-
 export default App;
